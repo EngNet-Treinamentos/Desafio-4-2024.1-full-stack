@@ -11,7 +11,35 @@ datasource db {
 }
 
 
-model Todo {
-  id    Int    @id @default(autoincrement()) @db.UnsignedInt
-  title String @db.VarChar(50)
+model Motorista {
+  nome           String   @db.VarChar(100)
+  cpf            String   @id @db.VarChar(11)
+  categoria_cnh  String   @db.VarChar(2)
+  vencimento_cnh DateTime @db.DateTime
+  carros         Carro[]
+}
+
+model Multa {
+  id          Int      @id @default(autoincrement()) @db.UnsignedInt
+  valor       Decimal    @db.Decimal(9, 2)
+  pontos      Int      @db.UnsignedInt
+  data        DateTime @db.DateTime
+  tipo        String   @db.VarChar(80)
+  placa_carro String   @db.VarChar(7)
+  carro       Carro    @relation(fields: [placa_carro], references: [placa])
+
+  @@index([placa_carro])
+}
+
+model Carro {
+  placa         String    @id @db.VarChar(7)
+  marca         String    @db.VarChar(100)
+  modelo        String    @db.VarChar(100)
+  ano           Int       @db.UnsignedInt
+  cor           String    @db.VarChar(100)
+  cpf String    @db.VarChar(11)
+  motorista     Motorista @relation(fields: [cpf], references: [cpf])
+  multas        Multa[]
+
+  @@index([cpf])
 }
